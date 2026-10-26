@@ -1,0 +1,19 @@
+{
+  "name": "k6-performance-lab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Testes moderados de performance com k6 para QuickPizza da Grafana.",
+  "scripts": {
+    "smoke:quickpizza": "k6 run scripts/quickpizza/smoke.js",
+    "load:quickpizza": "k6 run scripts/quickpizza/load.js",
+    "stress:quickpizza": "k6 run scripts/quickpizza/stress.js",
+    "spike:quickpizza": "k6 run scripts/quickpizza/spike.js",
+    "soak:quickpizza": "k6 run scripts/quickpizza/soak.js",
+    "breakpoint:quickpizza": "k6 run scripts/quickpizza/breakpoint.js",
+    "browser:quickpizza": "k6 run scripts/quickpizza/browser.js",
+    "scenario:quickpizza": "k6 run scenarios/multi-executor.js"
+  },
+  "devDependencies": {
+    "@types/k6": "2.3.0"
+  }
+}

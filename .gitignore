@@ -1,0 +1,46 @@
+# Dependências locais
+node_modules/
+
+# Resultados gerados pelo k6
+results/*
+!results/.gitkeep
+results/*.json.gz
+results/summary.json
+results/summary.html
+results/*.out
+results/*.csv
+
+# Documentação local fora do repositório
+docs/
+
+# Segredos e arquivos de ambiente
+.env
+.env.*
+!.env.example
+
+# Logs e arquivos temporários
+*.log
+npm-debug.log*
+*.tmp
+*.swp
+
+# Dados locais do Docker
+docker/data/
+docker/grafana-data/
+docker/influxdb-data/
+
+# Binários locais do k6
+k6
+k6.exe
+
+# Sistema operacional e editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# Build e cobertura
+dist/
+coverage/

@@ -1,0 +1,75 @@
+name: k6 Manual Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Alvo de demonstração
+        required: true
+        type: choice
+        options:
+          - quickpizza
+      test_type:
+        description: Tipo de teste
+        required: true
+        type: choice
+        options:
+          - load
+          - stress
+          - spike
+          - soak
+          - breakpoint
+          - browser
+      vus:
+        description: VUs desejados (máximo público 20)
+        required: true
+        default: '5'
+        type: string
+      duration:
+        description: 'Duração (ex.: 2m; limite aplicado pelo script)'
+        required: true
+        default: 2m
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  run-manual-test:
+    name: QuickPizza ${{ inputs.test_type }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Install k6 and Chromium
+        if: inputs.test_type == 'browser'
+        uses: grafana/setup-k6-action@v1.2.2
+        with:
+          k6-version: 1.0.0
+          browser: true
+
+      - name: Install k6
+        if: inputs.test_type != 'browser'
+        uses: grafana/setup-k6-action@v1.2.2
+        with:
+          k6-version: 1.0.0
+
+      - name: Run selected test
+        run: k6 run "scripts/quickpizza/${{ inputs.test_type }}.js"
+        env:
+          BASE_URL: https://quickpizza.grafana.com
+          VUS: ${{ inputs.vus }}
+          DURATION: ${{ inputs.duration }}
+          PROFILE: ${{ inputs.test_type }}
+          ENABLE_HIGH_LOAD: ${{ inputs.test_type == 'stress' || inputs.test_type == 'spike' || inputs.test_type == 'soak' || inputs.test_type == 'breakpoint' }}
+          K6_BROWSER_HEADLESS: 'true'
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: quickpizza-${{ inputs.test_type }}-results
+          path: results/
+          if-no-files-found: warn
+          retention-days: 14

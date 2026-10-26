@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "target": "ES2022",
+    "types": ["k6"]
+  },
+  "include": [
+    "config/**/*.js",
+    "lib/**/*.js",
+    "scripts/**/*.js",
+    "scenarios/**/*.js"
+  ]
+}

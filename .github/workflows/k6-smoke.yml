@@ -1,0 +1,42 @@
+name: k6 Smoke
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: k6-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  quickpizza-smoke:
+    name: QuickPizza smoke
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Install k6
+        uses: grafana/setup-k6-action@v1.2.2
+        with:
+          k6-version: 1.0.0
+
+      - name: Run smoke test
+        run: k6 run scripts/quickpizza/smoke.js
+        env:
+          BASE_URL: https://quickpizza.grafana.com
+          PROFILE: smoke
+          K6_BROWSER_HEADLESS: 'true'
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: quickpizza-smoke-results
+          path: results/
+          if-no-files-found: warn
+          retention-days: 14
